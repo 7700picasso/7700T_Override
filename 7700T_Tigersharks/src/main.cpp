@@ -15,13 +15,13 @@ using namespace vex;
 competition Competition;
 brain Brain;
 // define your global instances of motors and other devices here
-motor leftMotor = motor(PORT1, ratio18_1, false);
-motor rightMotor = motor(PORT1, ratio18_1, false);
-motor bleftMotor = motor(PORT1, ratio18_1, false);
-motor brightMotor = motor(PORT1, ratio18_1, false);
+motor leftMotor = motor(PORT1, ratio18_1, true);
+motor rightMotor = motor(PORT10, ratio18_1, false);
+motor bleftMotor = motor(PORT2, ratio18_1, true);
+motor brightMotor = motor(PORT9, ratio18_1, false);
 controller Potato_Controller = controller(primary);
 /*---------------------------------------------------------------------------*/
-/*                          Pre-Autonomous Functions                         */
+/*                          Pre-Autonomous Fu1aznctions                         */
 /*                                                                           */
 /*  You may want to perform some actions before the competition starts.      */
 /*  Do them in the following function.  You must return from this function   */
@@ -158,10 +158,12 @@ void usercontrol(void) {
   // User control code here, inside the loop
   while (1) {
     float prct = 1;
-    float leftSpeed = Potato_Controller.Axis3.position();
-    float rightSpeed = Potato_Controller.Axis2.position();
+	float leftSpeed=Potato_Controller.Axis3.position(pct)+Potato_Controller.Axis1.position(pct);
+	float rightSpeed=Potato_Controller.Axis3.position(pct)-Potato_Controller.Axis1.position(pct);
+    // float leftSpeed = Potato_Controller.Axis3.position();
+    // float rightSpeed = Potato_Controller.Axis2.position();
     if(Potato_Controller.ButtonA.pressing()){
-      prct = 0.5;
+      prct = 0.75;
     }
     else if(Potato_Controller.ButtonB.pressing()){
       prct = 1;
