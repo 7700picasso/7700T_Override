@@ -19,7 +19,13 @@ motor leftMotor = motor(PORT1, ratio18_1, true);
 motor rightMotor = motor(PORT10, ratio18_1, false);
 motor bleftMotor = motor(PORT2, ratio18_1, true);
 motor brightMotor = motor(PORT9, ratio18_1, false);
+motor Liftone = motor(PORT19, ratio6_1, false); //right
+motor Lifttwo = motor(PORT11, ratio6_1, false); //left
 controller Potato_Controller = controller(primary);
+digital_out claw =  digital_out(Brain.ThreeWirePort.A);
+
+
+
 /*---------------------------------------------------------------------------*/
 /*                          Pre-Autonomous Fu1aznctions                         */
 /*                                                                           */
@@ -29,6 +35,21 @@ controller Potato_Controller = controller(primary);
 /*  function is only called once after the V5 has been powered on and        */
 /*  not every time that the robot is disabled.                               */
 /*---------------------------------------------------------------------------*/
+
+
+
+
+void liftUp(float speed){
+  Liftone.spin(fwd, speed*-1, percent);
+  Lifttwo.spin(fwd, speed, percent);
+  wait(100, msec);
+}
+
+void liftHold(){
+  Liftone.stop(hold);
+  Lifttwo.stop(hold);
+}
+
 void Drive(float lspeed, float rspeed, int wt){
   leftMotor.spin(forward, lspeed, percent);
   bleftMotor.spin(forward, lspeed, percent);
@@ -94,6 +115,10 @@ void Display()
 	double rightFrontTemp = rightMotor.temperature(celsius);
 	double rightBackCurr = brightMotor.current(amp);
 	double rightBackTemp = brightMotor.temperature(celsius);
+	double LiftoneCurr = Liftone.current(amp);
+	double LiftoneTemp = Liftone.temperature(celsius);
+	double LifttwoCurr = Lifttwo.current(amp);
+	double LifttwoTemp = Lifttwo.temperature(celsius);
 
 
 	if (leftMotor.installed()){
@@ -125,6 +150,20 @@ void Display()
 		Brain.Screen.printAt(300, YOFFSET + 91, "RightBack");
 	} else {
 		Brain.Screen.printAt(5, YOFFSET + 91, "RightBack Problem");
+	}
+
+	if (Liftone.installed()) {
+		MotorDisplay(121, LiftoneCurr, LiftoneTemp);
+		Brain.Screen.printAt(300, YOFFSET + 121, "RightLift");
+	} else {
+		Brain.Screen.printAt(5, YOFFSET + 121, "RightLift Problem");
+	}
+
+	if (Lifttwo.installed()) {
+		MotorDisplay(151, LifttwoCurr, LifttwoTemp);
+		Brain.Screen.printAt(300, YOFFSET + 151, "LeftLift");
+	} else {
+		Brain.Screen.printAt(5, YOFFSET + 151, "LeftLift");
 	}
 
 }
@@ -160,19 +199,30 @@ void usercontrol(void) {
     float prct = 1;
 	float leftSpeed=Potato_Controller.Axis3.position(pct)+Potato_Controller.Axis1.position(pct);
 	float rightSpeed=Potato_Controller.Axis3.position(pct)-Potato_Controller.Axis1.position(pct);
+	//This is Tank Drive
     // float leftSpeed = Potato_Controller.Axis3.position();
     // float rightSpeed = Potato_Controller.Axis2.position();
-    if(Potato_Controller.ButtonA.pressing()){
-      prct = 0.75;
-    }
-    else if(Potato_Controller.ButtonB.pressing()){
+    if(Potato_Controller.ButtonL2.pressing()){
+	  prct = 0.75;
+		liftUp(150);
+      
+    } else if(Potato_Controller.ButtonL1.pressing()){
       prct = 1;
+	  liftUp(-100);
     }
     Drive(leftSpeed*prct, rightSpeed*prct, 10);
     Display();
-    if (Potato_Controller.ButtonX.pressing()) {
-          Brake();
-    }
+    // if (Potato_Controller.ButtonX.pressing()) {
+    //       Brake();
+    // }
+	// if (Controller1.ButtonL1.pressing()) {
+	// 		Pneu1.set(true);
+
+	// } 
+	// else if (Controller1.ButtonL2.pressing()) {
+	// 		Pneu1.set(false);
+	// } c
+
     // This is the main execution loop for the user control program.
     // Each time through the loop your program should update motor + servo
     // values based on feedback from the joysticks.
