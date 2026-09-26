@@ -15,14 +15,14 @@ using namespace vex;
 competition Competition;
 brain Brain;
 // define your global instances of motors and other devices here
-motor leftMotor = motor(PORT1, ratio18_1, true);
-motor rightMotor = motor(PORT10, ratio18_1, false);
-motor bleftMotor = motor(PORT2, ratio18_1, true);
-motor brightMotor = motor(PORT9, ratio18_1, false);
+motor leftMotor = motor(PORT1, ratio18_1, false);
+motor rightMotor = motor(PORT10, ratio18_1, true);
+motor bleftMotor = motor(PORT2, ratio18_1, false);
+motor brightMotor = motor(PORT9, ratio18_1, true);
 motor Liftone = motor(PORT19, ratio6_1, false); //right
 motor Lifttwo = motor(PORT11, ratio6_1, false); //left
 controller Potato_Controller = controller(primary);
-digital_out claw =  digital_out(Brain.ThreeWirePort.A);
+digital_out claw =  digital_out(Brain.ThreeWirePort.H);
 
 
 
@@ -197,31 +197,30 @@ void usercontrol(void) {
   // User control code here, inside the loop
   while (1) {
     float prct = 1;
-	float leftSpeed=Potato_Controller.Axis3.position(pct)+Potato_Controller.Axis1.position(pct);
-	float rightSpeed=Potato_Controller.Axis3.position(pct)-Potato_Controller.Axis1.position(pct);
+	float leftSpeed=(Potato_Controller.Axis3.position(pct)+Potato_Controller.Axis1.position(pct))*prct;
+	float rightSpeed=(Potato_Controller.Axis3.position(pct)-Potato_Controller.Axis1.position(pct))*prct;
 	//This is Tank Drive
     // float leftSpeed = Potato_Controller.Axis3.position();
     // float rightSpeed = Potato_Controller.Axis2.position();
     if(Potato_Controller.ButtonL2.pressing()){
-	  prct = 0.75;
-		liftUp(150);
-      
+	  prct = 0.3;
+	  liftUp(150);
     } else if(Potato_Controller.ButtonL1.pressing()){
-      prct = 1;
 	  liftUp(-100);
+	  prct = 1;
     }
     Drive(leftSpeed*prct, rightSpeed*prct, 10);
     Display();
     // if (Potato_Controller.ButtonX.pressing()) {
     //       Brake();
     // }
-	// if (Controller1.ButtonL1.pressing()) {
-	// 		Pneu1.set(true);
+	if (Potato_Controller.ButtonR1.pressing()) {
+			claw.set(true);
 
-	// } 
-	// else if (Controller1.ButtonL2.pressing()) {
-	// 		Pneu1.set(false);
-	// } c
+	} 
+	else if (Potato_Controller.ButtonR2.pressing()) {
+			claw.set(false);
+	}
 
     // This is the main execution loop for the user control program.
     // Each time through the loop your program should update motor + servo
