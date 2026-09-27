@@ -19,8 +19,8 @@ motor leftMotor = motor(PORT1, ratio18_1, false);
 motor rightMotor = motor(PORT10, ratio18_1, true);
 motor bleftMotor = motor(PORT2, ratio18_1, false);
 motor brightMotor = motor(PORT9, ratio18_1, true);
-motor Liftone = motor(PORT19, ratio6_1, false); //right
-motor Lifttwo = motor(PORT11, ratio6_1, false); //left
+motor Liftone = motor(PORT19, ratio18_1, false); //right
+motor Lifttwo = motor(PORT11, ratio18_1, true); //left
 controller Potato_Controller = controller(primary);
 digital_out claw =  digital_out(Brain.ThreeWirePort.H);
 
@@ -202,13 +202,30 @@ void usercontrol(void) {
 	//This is Tank Drive
     // float leftSpeed = Potato_Controller.Axis3.position();
     // float rightSpeed = Potato_Controller.Axis2.position();
-    if(Potato_Controller.ButtonL2.pressing()){
+    if(Potato_Controller.ButtonB.pressing()){
 	  prct = 0.3;
-	  liftUp(150);
-    } else if(Potato_Controller.ButtonL1.pressing()){
-	  liftUp(-100);
+	 
+	  //liftHold();
+    } else if(Potato_Controller.ButtonY.pressing()){
+	
 	  prct = 1;
+	  //liftHold();
     }
+	if (Potato_Controller.ButtonL1.pressing()) {
+		 Liftone.spin(fwd, 100, percent);
+  		Lifttwo.spin(fwd, 100, percent);
+
+	}
+	else if (Potato_Controller.ButtonL2.pressing()) { 
+		Liftone.spin(reverse, 100, percent);
+  		Lifttwo.spin(reverse, 100, percent);
+
+	}
+	else {
+		Liftone.stop();
+		Lifttwo.stop();
+
+	}
     Drive(leftSpeed*prct, rightSpeed*prct, 10);
     Display();
     // if (Potato_Controller.ButtonX.pressing()) {
@@ -221,6 +238,8 @@ void usercontrol(void) {
 	else if (Potato_Controller.ButtonR2.pressing()) {
 			claw.set(false);
 	}
+
+
 
     // This is the main execution loop for the user control program.
     // Each time through the loop your program should update motor + servo
