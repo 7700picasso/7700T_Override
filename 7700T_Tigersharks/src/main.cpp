@@ -25,6 +25,10 @@ controller Potato_Controller = controller(primary);
 digital_out claw =  digital_out(Brain.ThreeWirePort.H);
 
 
+double pi = 3.14;
+double wheel_diameter = 3.25;
+double gear_ratio = 0.6;
+
 
 /*---------------------------------------------------------------------------*/
 /*                          Pre-Autonomous Fu1aznctions                         */
@@ -64,6 +68,24 @@ void Brake(){
   rightMotor.stop(brake);
   brightMotor.stop(brake);
 }
+
+void pinchdrive(float target){
+float position=0;
+float error=target-position;
+float kp=2;
+float speed=kp*error;
+float accuracy=1.5;
+leftMotor.setPosition(0.0,rev);
+
+while(fabs(error)>accuracy){
+	Drive(speed, speed, 10);
+	position=leftMotor.position(rev) * pi * gear_ratio * wheel_diameter;
+	error=target-position;
+	speed=kp*error;	
+	}
+	Brake();
+}
+
 void pre_auton(void) {
 
   // All activities that occur before the competition starts
@@ -179,9 +201,8 @@ void Display()
 /*---------------------------------------------------------------------------*/
 
 void autonomous(void) {
-  // ..........................................................................
-  // Insert autonomous user code here.
-  // ..........................................................................
+  pinchdrive(24);
+  Brake();
 }
 
 /*---------------------------------------------------------------------------*/
