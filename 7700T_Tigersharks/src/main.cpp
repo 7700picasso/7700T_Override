@@ -23,7 +23,7 @@ motor Liftone = motor(PORT19, ratio18_1, false); //right
 motor Lifttwo = motor(PORT11, ratio18_1, true); //left
 controller Potato_Controller = controller(primary);
 digital_out claw =  digital_out(Brain.ThreeWirePort.H);
-inertial gyro = inertial(PORT13);
+inertial gyrosensor = inertial(PORT13);
 
 double pi = 3.14;
 double wheel_diameter = 3.25;
@@ -190,23 +190,23 @@ void Display()
 
 }
 
-void gyroprint(){
-	float rotation = gyro.rotation(deg);
-	Brain.Screen.PrintAt(1,60, "rotation = %.2f. degrees", rotation);
+void gyrosensorprint(){
+	float rotation = gyrosensor.rotation(deg);
+	Brain.Screen.printAt(1,60, "rotation = %.2f. degrees", rotation);
 }
 
-void gyroturn(float target){
+void gyrosensorturn(float target){
 	float position = 0.0;
 	float error = target-position;
 	float kp = 2;
 	float speed = kp * error;
 	float accuracy = 2.0;
-	gyro.setRotation(0.0, degrees);
+	gyrosensor.setRotation(0.0, degrees);
 while(fabs(error)>=accuracy)
 {
 speed=kp*error;
 Drive(speed, -speed, 10); //turn right at half speed
-position=gyro.rotation();  //measure the heading of the robot
+position=gyrosensor.rotation();  //measure the heading of the robot
 error = target-position;  //calculate error
 }
 Drive(0, 0, 0);  //stope the drive
