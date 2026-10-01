@@ -202,8 +202,16 @@ void gyroturn(float target){
 	float speed = kp * error;
 	float accuracy = 2.0;
 	gyro.setRotation(0.0, degrees);
-	
+while(fabs(error)>=accuracy)
+{
+speed=kp*error;
+Drive(speed, -speed, 10); //turn right at half speed
+position=gyro.rotation();  //measure the heading of the robot
+error = target-position;  //calculate error
 }
+Drive(0, 0, 0);  //stope the drive
+}
+
 
 /*---------------------------------------------------------------------------*/
 /*                                                                           */
