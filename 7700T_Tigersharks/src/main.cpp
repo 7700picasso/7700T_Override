@@ -15,15 +15,15 @@ using namespace vex;
 competition Competition;
 brain Brain;
 // define your global instances of motors and other devices here
-motor leftMotor = motor(PORT1, ratio18_1, false);
-motor rightMotor = motor(PORT10, ratio18_1, true);
-motor bleftMotor = motor(PORT2, ratio18_1, false);
-motor brightMotor = motor(PORT9, ratio18_1, true);
-motor Liftone = motor(PORT19, ratio18_1, false); //right
-motor Lifttwo = motor(PORT11, ratio18_1, true); //left
+motor leftMotor = motor(PORT8, ratio6_1, true);
+motor rightMotor = motor(PORT1, ratio6_1, false);
+motor bleftMotor = motor(PORT9, ratio6_1, true);
+motor brightMotor = motor(PORT21, ratio6_1, false);
+motor Liftone = motor(PORT20, ratio18_1, false); //right
+motor Lifttwo = motor(PORT17, ratio18_1, true); //left
 controller Potato_Controller = controller(primary);
 digital_out claw =  digital_out(Brain.ThreeWirePort.H);
-inertial gyrosensor = inertial(PORT13);
+inertial gyrosensor = inertial(PORT6);
 
 double pi = 3.14;
 double wheel_diameter = 3.25;
@@ -43,10 +43,12 @@ double gear_ratio = 0.6;
 
 
 
-void liftUp(float speed){
-  Liftone.spin(fwd, speed*-1, percent);
+void liftUp(float speed, int wt){
+  Liftone.spin(fwd, speed, percent);
   Lifttwo.spin(fwd, speed, percent);
-  wait(100, msec);
+  wait(wt, msec);
+  Liftone.stop(brake);
+  Lifttwo.stop(brake);
 }
 
 void liftHold(){
@@ -69,28 +71,8 @@ void Brake(){
   brightMotor.stop(brake);
 }
 
-void pinchdrive(float target){
-float position=0;
-float error=target-position;
-float kp=2;
-float speed=kp*error;
-float accuracy=1.5;
-leftMotor.setPosition(0.0,rev);
 
-while(fabs(error)>accuracy){
-	Drive(speed, speed, 10);
-	position=leftMotor.position(rev) * pi * gear_ratio * wheel_diameter;
-	error=target-position;
-	speed=kp*error;	
-	}
-	Brake();
-}
 
-void pre_auton(void) {
-
-  // All activities that occur before the competition starts
-  // Example: clearing encoders, setting servo positions, ...
-}
 double YOFFSET = 20; //offset for the display
 //Writes a line for the diagnostics of a motor on the Brain
 void MotorDisplay(double y, double curr, double temp)
@@ -198,21 +180,49 @@ void gyrosensorprint(){
 void gyrosensorturn(float target){
 	float position = 0.0;
 	float error = target-position;
-	float kp = 2;
+	float kp = 0.5;
 	float speed = kp * error;
 	float accuracy = 2.0;
 	gyrosensor.setRotation(0.0, degrees);
 while(fabs(error)>=accuracy)
 {
 speed=kp*error;
-Drive(speed, -speed, 10); //turn right at half speed
+Drive(speed, -speed, 10); //turn right always
 position=gyrosensor.rotation();  //measure the heading of the robot
 error = target-position;  //calculate error
 }
 Drive(0, 0, 0);  //stope the drive
+gyrosensorprint();
 }
 
 
+void pinchdrive(float target){
+float position=0;
+float error=target-position;
+float kp=2;
+float speed=kp*error;
+float accuracy=0.5;
+leftMotor.setPosition(0.0,rev);
+
+while(fabs(error)>accuracy){
+	Drive(speed, speed, 10);
+	position=leftMotor.position(rev) * pi * gear_ratio * wheel_diameter;
+	error=target-position;
+	speed=kp*error;	
+	}
+	Brake();
+}
+
+
+
+
+
+//__________________________________EOF___________________________________________
+void pre_auton(void) {
+
+  // All activities that occur before the competition starts
+  // Example: clearing encoders, setting servo positions, ...
+}
 /*---------------------------------------------------------------------------*/
 /*                                                                           */
 /*                              Autonomous Task                              */
@@ -224,8 +234,24 @@ Drive(0, 0, 0);  //stope the drive
 /*---------------------------------------------------------------------------*/
 
 void autonomous(void) {
-  pinchdrive(24);
-  Brake();
+  	claw.set(true);
+	liftUp(70, 500);
+	liftHold();
+	pinchdrive(9);
+	liftUp(-50, 500);
+	claw.set(false);
+	pinchdrive(-8);	
+	gyrosensorturn(-50);
+	pinchdrive(37);
+	gyrosensorturn(90);
+	
+	Drive(-75, -75, 900);	
+	Drive(75, 75, 500);
+	Drive(-100, -100, 500);	
+	Drive(100, 100, 200);
+	Brake();
+	
+
 }
 
 /*---------------------------------------------------------------------------*/
