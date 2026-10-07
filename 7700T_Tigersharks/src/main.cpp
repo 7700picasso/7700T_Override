@@ -182,6 +182,7 @@ void gyrosensorturn(float target){
 	float error = target-position;
 	float kp = 0.5;
 	float speed = kp * error;
+
 	float accuracy = 2.0;
 	gyrosensor.setRotation(0.0, degrees);
 while(fabs(error)>=accuracy)
@@ -191,7 +192,7 @@ Drive(speed, -speed, 10); //turn right always
 position=gyrosensor.rotation();  //measure the heading of the robot
 error = target-position;  //calculate error
 }
-Drive(0, 0, 0);  //stope the drive
+Drive(0, 0, 0);  //stop the drive
 gyrosensorprint();
 }
 
@@ -219,6 +220,7 @@ while(fabs(error)>accuracy){
 
 //__________________________________EOF___________________________________________
 void pre_auton(void) {
+	claw.set(true);
 
   // All activities that occur before the competition starts
   // Example: clearing encoders, setting servo positions, ...
@@ -237,18 +239,19 @@ void autonomous(void) {
   	claw.set(true);
 	liftUp(70, 500);
 	liftHold();
-	pinchdrive(9);
-	liftUp(-50, 500);
+	pinchdrive(8.3);
+	liftUp(-40, 600);
 	claw.set(false);
+	liftUp(50, 500);
 	pinchdrive(-8);	
 	gyrosensorturn(-50);
 	pinchdrive(37);
 	gyrosensorturn(90);
-	
+	liftUp(-70, 500);
 	Drive(-75, -75, 900);	
-	Drive(75, 75, 500);
-	Drive(-100, -100, 500);	
-	Drive(100, 100, 200);
+	Drive(80, 80, 500);
+	Drive(-125, -125, 700);
+	pinchdrive(35);
 	Brake();
 	
 
@@ -266,21 +269,11 @@ void autonomous(void) {
 void usercontrol(void) {
   // User control code here, inside the loop
   while (1) {
-    float prct = 1;
-	float leftSpeed=(Potato_Controller.Axis3.position(pct)+Potato_Controller.Axis1.position(pct))*prct;
-	float rightSpeed=(Potato_Controller.Axis3.position(pct)-Potato_Controller.Axis1.position(pct))*prct;
+    float prct = 0.7;
+
 	//This is Tank Drive
-    // float leftSpeed = Potato_Controller.Axis3.position();
-    // float rightSpeed = Potato_Controller.Axis2.position();
-    if(Potato_Controller.ButtonB.pressing()){
-	  prct = 0.3;
-	 
-	  //liftHold();
-    } else if(Potato_Controller.ButtonY.pressing()){
-	
-	  prct = 1;
-	  //liftHold();
-    }
+    float leftSpeed = Potato_Controller.Axis3.position();
+    float rightSpeed = Potato_Controller.Axis2.position();
 	if (Potato_Controller.ButtonL1.pressing()) {
 		 Liftone.spin(fwd, 100, percent);
   		Lifttwo.spin(fwd, 100, percent);
@@ -303,10 +296,12 @@ void usercontrol(void) {
     // }
 	if (Potato_Controller.ButtonR1.pressing()) {
 			claw.set(true);
+			prct = 0.5;
 
 	} 
 	else if (Potato_Controller.ButtonR2.pressing()) {
 			claw.set(false);
+			prct = 0.75;
 	}
 
 
