@@ -269,6 +269,7 @@ void autonomous(void) {
 void usercontrol(void) {
   // User control code here, inside the loop
   while (1) {
+<<<<<<< Updated upstream
     float prct = 0.7;
 
 	//This is Tank Drive
@@ -305,6 +306,49 @@ void usercontrol(void) {
 	}
 
 
+=======
+	Display();
+	int speed =80; 
+    float prct = 1;
+	float leftSpeed=Potato_Controller.Axis3.position(pct)+Potato_Controller.Axis1.position(pct);
+	float rightSpeed=Potato_Controller.Axis3.position(pct)-Potato_Controller.Axis1.position(pct);
+	//This is Tank Drive
+    // float leftSpeed = Potato_Controller.Axis3.position();
+    // float rightSpeed = Potato_Controller.Axis2.position();
+    if(Potato_Controller.ButtonA.pressing()){
+	  prct = 0.75;
+		
+      
+    } else if(Potato_Controller.ButtonB.pressing()){
+      prct = 1;
+	 
+    }
+    Drive(leftSpeed*prct, rightSpeed*prct, 10);
+    
+    if (Potato_Controller.ButtonX.pressing()) {
+          Brake();
+    }
+	if (Potato_Controller.ButtonL1.pressing()) {
+			claw.set(true);
+
+	} 
+	else if (Potato_Controller.ButtonL2.pressing()) {
+			claw.set(false);
+	} 
+
+	if (Potato_Controller.ButtonR1.pressing()){ 
+		Liftone.spin(fwd, speed*-1, percent);
+  		Lifttwo.spin(fwd, speed, percent);
+	}
+	else if(Potato_Controller.ButtonR2.pressing()) {
+		Liftone.spin(reverse, speed*-1, percent);
+		Lifttwo.spin(reverse, speed, percent);
+	}
+	else {
+		Liftone.stop();
+		Lifttwo.stop();
+	}
+>>>>>>> Stashed changes
 
     // This is the main execution loop for the user control program.
     // Each time through the loop your program should update motor + servo
