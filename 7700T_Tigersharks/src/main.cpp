@@ -205,7 +205,7 @@ gyrosensorprint();
 void pinchdrive(float target){
 float position=0;
 float error=target-position;
-float kp=2;
+float kp=2.5;
 float speed=kp*error;
 float accuracy=0.5;
 frontLeft.setPosition(0.0,rev);
@@ -358,28 +358,53 @@ void autonomous(void) {
 	switch (AutonSelected) {
 
 	case 1:
-	//skills auton
-		break;
-
-	case 2:
-	//right side 15 second auton
+	//RED drive 
 		claw.set(true); 
 		liftUp(70, 500);
 		liftHold();
-		pinchdrive(8.3);
+		pinchdrive(10);
 		liftUp(-40, 600);
 		claw.set(false);
-		liftUp(50, 500);
-		pinchdrive(-8);	
-		gyrosensorturn(-50);
-		pinchdrive(37);
-		gyrosensorturn(90);
-		liftUp(-70, 500);
-		Drive(-75, -75, 900);	
+		// liftUp(50, 500);
+		pinchdrive(-9.5);	
+		 gyrosensorturn(50);
+		pinchdrive(32);
+		 gyrosensorturn(90);
+		//liftUp(-70, 500);
+		//Drive(-75, -75, 900);	
 		Drive(80, 80, 500);
-		Drive(-125, -125, 700);
-		pinchdrive(35);
-		Brake();
+		Drive(-30, -30, 200);
+		wait(250, msec); 
+		Drive(50, 50, 600);
+		Drive(-80, -80, 300);
+
+		// pinchdrive(35);
+		 Brake();
+		break;
+
+	case 2:
+	//RED Drive Station 15 second auton
+		claw.set(true); 
+		liftUp(70, 500);
+		liftHold();
+		pinchdrive(10);
+		liftUp(-40, 600);
+		claw.set(false);
+		// liftUp(50, 500);
+		pinchdrive(-9.5);	
+		 gyrosensorturn(-50);
+		pinchdrive(32);
+		 gyrosensorturn(-90);
+		//liftUp(-70, 500);
+		//Drive(-75, -75, 900);	
+		Drive(80, 80, 500);
+		Drive(-30, -30, 200);
+		wait(250, msec); 
+		Drive(50, 50, 600);
+		Drive(-80, -80, 300);
+
+		// pinchdrive(35);
+		 Brake();
 		break;
 
 	case 3:
