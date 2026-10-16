@@ -363,7 +363,7 @@ void autonomous(void) {
 
 	case 2:
 	//right side 15 second auton
-		claw.set(true);
+		claw.set(true); 
 		liftUp(70, 500);
 		liftHold();
 		pinchdrive(8.3);
@@ -405,12 +405,61 @@ void autonomous(void) {
 /*---------------------------------------------------------------------------*/
 void usercontrol(void) {
   // User control code here, inside the loop
+  float prct = 1;
   while (1) {
-    float prct = 0.7;
+    
+	// Select the speed mode FIRST
+if (Potato_Controller.ButtonA.pressing()) {
+    prct = 0.25;
+}
+else if (Potato_Controller.ButtonB.pressing()) {
+    prct = 1.0;
+}
 
+// Read joystick positions
+float leftSpeed = Potato_Controller.Axis3.position();
+float rightSpeed = Potato_Controller.Axis2.position();
+
+// Apply the speed multiplier
+float leftCommand = leftSpeed * prct;
+float rightCommand = rightSpeed * prct;
+
+// Drive the robot
+Drive(leftCommand, rightCommand, 10);
+
+// Display speed commands on the V5 Controller
+Potato_Controller.Screen.clearLine(1);
+Potato_Controller.Screen.setCursor(1, 1);
+Potato_Controller.Screen.print("Mode: %s",
+    prct == 0.25 ? "SLOW" : "NORMAL");
+
+// Potato_Controller.Screen.clearLine(2);
+// Potato_Controller.Screen.setCursor(2, 1);
+// Potato_Controller.Screen.print("Left: %.0f%%", leftCommand);
+
+// Potato_Controller.Screen.clearLine(3);
+// Potato_Controller.Screen.setCursor(3, 1);
+// Potato_Controller.Screen.print("Right: %.0f%%", rightCommand);
+	
+	
+	
+	//float prct = 0.7;
+	
 	//This is Tank Drive
-    float leftSpeed = Potato_Controller.Axis3.position();
-    float rightSpeed = Potato_Controller.Axis2.position();
+    // float leftSpeed = Potato_Controller.Axis3.position();
+    // float rightSpeed = Potato_Controller.Axis2.position();
+
+	// float leftPower = LeftSpeed 
+
+	//    Drive(leftSpeed*prct, rightSpeed*prct, 10);
+
+	//      if(Potato_Controller.ButtonA.pressing()){
+	//   	prct = 0.25;
+	// 	}
+	// 	else if (Potato_Controller.ButtonB.pressing()){
+	// 		prct = 1;
+	// 	}
+
 	if (Potato_Controller.ButtonL1.pressing()) {
 		 Liftone.spin(fwd, 100, percent);
   		Lifttwo.spin(fwd, 100, percent);
@@ -426,33 +475,31 @@ void usercontrol(void) {
 		Lifttwo.stop();
 
 	}
-    Drive(leftSpeed*prct, rightSpeed*prct, 10);
+ 
     // Display();
     // if (Potato_Controller.ButtonX.pressing()) {
     //       Brake();
     // }
 	if (Potato_Controller.ButtonR1.pressing()) {
 			claw.set(true);
-			prct = 0.5;
+			// prct = 0.5;
 
 	} 
 	else if (Potato_Controller.ButtonR2.pressing()) {
 			claw.set(false);
-			prct = 0.75;
+			// prct = 0.75;
 	}
 
 
 	// Display();
-	// int speed =80; 
-    // float prct = 1;
+	//int speed =80; 
+    
 	// float leftSpeed=Potato_Controller.Axis3.position(pct)+Potato_Controller.Axis1.position(pct);
 	// float rightSpeed=Potato_Controller.Axis3.position(pct)-Potato_Controller.Axis1.position(pct);
-	// //This is Tank Drive
-    // // float leftSpeed = Potato_Controller.Axis3.position();
-    // // float rightSpeed = Potato_Controller.Axis2.position();
-    // if(Potato_Controller.ButtonA.pressing()){
-	//   prct = 0.75;
-		
+	//This is Tank Drive
+    // float leftSpeed = Potato_Controller.Axis3.position();
+    // float rightSpeed = Potato_Controller.Axis2.position();
+  
       
     // } else if(Potato_Controller.ButtonB.pressing()){
     //   prct = 1;
