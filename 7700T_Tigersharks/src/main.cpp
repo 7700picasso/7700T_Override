@@ -28,7 +28,7 @@ inertial gyrosensor = inertial(PORT6);
 double pi = 3.14;
 double wheel_diameter = 3.25;
 double gear_ratio = 0.6;
-int AutonSelected = 1; 
+int AutonSelected = 0; 
 
 
 /*---------------------------------------------------------------------------*/
@@ -207,7 +207,7 @@ float position=0;
 float error=target-position;
 float kp=2.5;
 float speed=kp*error;
-float accuracy=0.5;
+float accuracy=0.4;
 frontLeft.setPosition(0.0,rev);
 
 while(fabs(error)>accuracy){
@@ -358,11 +358,11 @@ void autonomous(void) {
 	switch (AutonSelected) {
 
 	case 1:
-	//RED drive 
+	//RED Adjcant side  
 		claw.set(true); 
-		liftUp(70, 500);
+		liftUp(70, 400);
 		liftHold();
-		pinchdrive(10);
+		pinchdrive(10.2);
 		liftUp(-40, 600);
 		claw.set(false);
 		// liftUp(50, 500);
@@ -371,8 +371,9 @@ void autonomous(void) {
 		pinchdrive(32);
 		 gyrosensorturn(90);
 		//liftUp(-70, 500);
-		//Drive(-75, -75, 900);	
-		Drive(80, 80, 500);
+		//Drive(-75, -75, 900);
+		Drive(-30, -30, 200);	
+		Drive(60, 60, 600);
 		Drive(-30, -30, 200);
 		wait(250, msec); 
 		Drive(50, 50, 600);
@@ -385,23 +386,22 @@ void autonomous(void) {
 	case 2:
 	//RED Drive Station 15 second auton
 		claw.set(true); 
-		liftUp(70, 500);
+		liftUp(40, 300);
 		liftHold();
-		pinchdrive(10);
+		pinchdrive(11);
 		liftUp(-40, 600);
 		claw.set(false);
 		// liftUp(50, 500);
-		pinchdrive(-9.5);	
-		 gyrosensorturn(-50);
-		pinchdrive(32);
-		 gyrosensorturn(-90);
-		//liftUp(-70, 500);
-		//Drive(-75, -75, 900);	
-		Drive(80, 80, 500);
-		Drive(-30, -30, 200);
-		wait(250, msec); 
-		Drive(50, 50, 600);
-		Drive(-80, -80, 300);
+		pinchdrive(-10);	
+		// gyrosensorturn(-50);
+		// pinchdrive(34);
+		// gyrosensorturn(-90);
+		// Drive(-30, -30, 900);	
+		// Drive(80, 80, 600);
+		// Drive(-40, -40, 200);
+		// wait(250, msec); 
+		// Drive(60, 60, 600);
+		// Drive(-90, -90, 300);
 
 		// pinchdrive(35);
 		 Brake();
