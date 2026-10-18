@@ -389,17 +389,18 @@ void autonomous(void) {
 		liftUp(40, 300);
 		liftHold();
 		Drive(20, 20, 800);
-		liftUp(-40, 600);
 		wait(300, msec);
+		liftUp(-40, 600);
 		claw.set(false);
-		gyrosensorturn(-180);
 		pinchdrive(-8);
-		// Drive(-30, -30, 900);	
-		// Drive(80, 80, 600);
-		// Drive(-40, -40, 200);
-		// wait(250, msec); 
-		// Drive(60, 60, 600);
-		// Drive(-90, -90, 300);
+		gyrosensorturn(35);	
+		Drive(-50, -50, 600);
+		gyrosensorturn(90);
+		Drive(100, 100, 600);
+		Drive(-40, -40, 200);
+		wait(250, msec); 
+		Drive(100, 100, 600);
+		Drive(-10, -10, 300);
 
 		// pinchdrive(35);
 		 Brake();
