@@ -28,7 +28,7 @@ inertial gyrosensor = inertial(PORT6);
 double pi = 3.14;
 double wheel_diameter = 3.25;
 double gear_ratio = 0.6;
-int AutonSelected = 0; 
+int AutonSelected = 5; 
 
 
 /*---------------------------------------------------------------------------*/
@@ -203,21 +203,21 @@ gyrosensorprint();
 
 
 void pinchdrive(float target){
-float position=0;
-float error=target-position;
-float kp=2.5;
-float speed=kp*error;
-float accuracy=0.4;
-frontLeft.setPosition(0.0,rev);
+	float position=0;
+	float error=target-position;
+	float kp=2.5;
+	float speed=kp*error;
+	float accuracy=0.4;
+	frontLeft.setPosition(0.0,rev);
 
-while(fabs(error)>accuracy){
-	Drive(speed, speed, 10);
-	position=frontLeft.position(rev) * pi * gear_ratio * wheel_diameter;
-	error=target-position;
-	speed=kp*error;	
+	while(fabs(error)>accuracy){
+		Drive(speed, speed, 10);
+		position=frontLeft.position(rev) * pi * gear_ratio * wheel_diameter;
+		error=target-position;
+		speed=kp*error;	
+		}
+		Brake();
 	}
-	Brake();
-}
 
 void drawAutonButtons() {
   const char* autonNames[] = {"RED 1", "RED 2", "BLUE 1", "BLUE 2", "SKILLS"};
@@ -360,24 +360,32 @@ void autonomous(void) {
 	case 1:
 	//RED Adjcant side  
 		claw.set(true); 
-		liftUp(70, 400);
+		liftUp(60, 400);
 		liftHold();
-		pinchdrive(10.2);
+		pinchdrive(10.3);
 		liftUp(-40, 600);
 		claw.set(false);
+
+		//drive back with inches (10)
+		pinchdrive(-7);
+
+		//turn left -120
+		gyrosensorturn(-130);
+
+
 		// liftUp(50, 500);
-		pinchdrive(-9.5);	
-		 gyrosensorturn(50);
-		pinchdrive(32);
-		 gyrosensorturn(90);
-		//liftUp(-70, 500);
+		// pinchdrive(-9.5);	
+		//  gyrosensorturn(50);
+		// pinchdrive(32);
+		//  gyrosensorturn(90);
+		// //liftUp(-70, 500);
 		//Drive(-75, -75, 900);
 		Drive(-30, -30, 200);	
 		Drive(60, 60, 500);
 		Drive(-30, -30, 200);
 		wait(250, msec); 
 		Drive(50, 50, 500);
-		Drive(-80, -80, 800);
+		Drive(-80, -80, 300);
 
 		// pinchdrive(35);
 		 Brake();
@@ -412,7 +420,33 @@ void autonomous(void) {
 	//auton left side 15 second auton
 
 		break;
+case 4:
+	//auton left side 15 second auton
 
+		break;
+		case 5:
+	//auton skills auton
+claw.set(true); 
+		liftUp(40, 300);
+		liftHold();
+		pinchdrive(11);
+		liftUp(-40, 600);
+		claw.set(false);
+		pinchdrive(-8);
+		gyrosensorturn(40);	
+		pinchdrive(-13);
+		gyrosensorturn(90);
+		wait(250, msec);
+		Drive(100, 100, 600);
+		Drive(-40, -40, 200);
+		wait(250, msec); 
+		Drive(60, 60, 600);
+		wait(300, msec); 
+		Drive(-10, -10, 300);
+		pinchdrive(-39);
+		// pinchdrive(35);
+		 Brake();
+		break;
 
 	}
 		
