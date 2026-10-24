@@ -267,7 +267,7 @@ void checkAutonTouch(){
 color getTempColor(double temperatureC) {
   if (temperatureC <= 30.0) {
     return color::green;
-  } else if (temperatureC < 40.0) {
+  } else if (temperatureC < 50.0) {
     return color::yellow;
   } else {
     return color::red;
@@ -386,7 +386,11 @@ void autonomous(void) {
 		wait(250, msec); 
 		Drive(50, 50, 500);
 		Drive(-80, -80, 300);
-
+		pinchdrive(-36);
+		gyrosensorturn(90);
+		claw.set(false);
+		liftUp(-40, 500);
+		pinchdrive(7.5);
 		// pinchdrive(35);
 		 Brake();
 		break;
@@ -467,7 +471,7 @@ void usercontrol(void) {
   // User control code here, inside the loop
   float prct = 1;
   while (1) {
-    
+    updateMotorMonitor(); 
 	// Select the speed mode FIRST
 if (Potato_Controller.ButtonA.pressing()) {
     prct = 0.25;
