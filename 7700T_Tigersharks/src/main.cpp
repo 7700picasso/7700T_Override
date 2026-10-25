@@ -367,10 +367,12 @@ void autonomous(void) {
 		claw.set(false);
 
 		//drive back with inches (10)
-		pinchdrive(-7);
+		pinchdrive(-8);
 
 		//turn left -120
-		gyrosensorturn(-130);
+
+		// gyrosensorturn(-130);
+		Drive(-100, 10, 600);
 
 
 		// liftUp(50, 500);
