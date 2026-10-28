@@ -24,6 +24,7 @@ motor Lifttwo = motor(PORT17, ratio18_1, true); //left
 controller Potato_Controller = controller(primary);
 digital_out claw =  digital_out(Brain.ThreeWirePort.H);
 inertial gyrosensor = inertial(PORT6);
+distance sonar1 = distance(PORT10);
 
 double pi = 3.14;
 double wheel_diameter = 3.25;
@@ -187,7 +188,6 @@ void gyrosensorturn(float target){
 	float error = target-position;
 	float kp = 0.5;
 	float speed = kp * error;
-
 	float accuracy = 2.0;
 	gyrosensor.setRotation(0.0, degrees);
 while(fabs(error)>=accuracy)
@@ -201,6 +201,29 @@ Drive(0, 0, 0);  //stop the drive
 gyrosensorprint();
 }
 
+void dpinchdrive(float target, bool sonar_truefalse){
+	float position=0;
+	float error=target-position;
+	float kp=2.5;
+	float speed=kp*error;
+	float accuracy=0.4;
+	double sonar_distance = sonar1.objectDistance(mm);
+	frontLeft.setPosition(0.0,rev);
+
+	while(fabs(error)>accuracy){
+		Drive(speed, speed, 10);
+		if(sonar_distance <= 50 && sonar_truefalse){
+			Brake();
+			claw.set(true);
+			break;
+			
+		}
+		position=frontLeft.position(rev) * pi * gear_ratio * wheel_diameter;
+		error=target-position;
+		speed=kp*error;	
+		}
+		Brake();
+	}
 
 void pinchdrive(float target){
 	float position=0;
@@ -356,7 +379,10 @@ void pre_auton(void) {
 
 void autonomous(void) {
 	switch (AutonSelected) {
-
+	// case 0:
+	// claw.set(false);
+	// pinchdrive(20, true);
+	// break;
 	case 1:
 	//RED Adjcant side  
 		claw.set(true); 
@@ -432,11 +458,12 @@ case 4:
 		break;
 		case 5:
 	//auton skills auton
-claw.set(true); 
+		claw.set(true); 
 		liftUp(40, 300);
 		liftHold();
-		pinchdrive(11);
+		pinchdrive(11.4);
 		liftUp(-40, 600);
+		liftHold();
 		claw.set(false);
 		pinchdrive(-8);
 		gyrosensorturn(40);	
@@ -449,8 +476,11 @@ claw.set(true);
 		Drive(60, 60, 600);
 		wait(300, msec); 
 		Drive(-10, -10, 300);
-		pinchdrive(-39);
-		// pinchdrive(35);
+		pinchdrive(-41);
+		gyrosensorturn(-90);
+		pinchdrive(18.8);
+		claw.set(true); 
+		// pinchdrive(-39);
 		 Brake();
 		break;
 
