@@ -95,6 +95,12 @@ void Sonar_Drive(float lspeed, float rspeed){
 	}
 }
 
+void Sonar_Stop(){
+	//force stop the sonar?
+	double actualDistance = sonar1.objectDistance(mm);
+	
+}
+
 double YOFFSET = 20; //offset for the display
 //Writes a line for the diagnostics of a motor on the Brain
 void MotorDisplay(double y, double curr, double temp)
@@ -403,6 +409,7 @@ void pre_auton(void) {
 
 void autonomous(void) {
 	switch (AutonSelected) {
+	AutonSelected = 5;
 	case 0:
 	claw.set(false);
 	Sonar_Drive(10, 10);
@@ -502,8 +509,12 @@ case 4:
 		Drive(-10, -10, 300);
 		pinchdrive(-41);
 		gyrosensorturn(-90);
-		pinchdrive(18.8);
-		claw.set(true); 
+		Sonar_Drive(13, 13);
+		liftUp(30, 1000);
+		wait(250, msec); 
+		pinchdrive(6);
+		gyrosensorturn(90);
+		pinchdrive(18);
 		// pinchdrive(-39);
 		 Brake();
 		break;
@@ -532,12 +543,20 @@ void usercontrol(void) {
 	wait(100, msec); 
     updateMotorMonitor(); 
 	// Select the speed mode FIRST
-if (Potato_Controller.ButtonA.pressing()) {
-    prct = 0.25;
-}
-else if (Potato_Controller.ButtonB.pressing()) {
-    prct = 1.0;
-}
+	if (Potato_Controller.ButtonA.pressing()) {
+		prct = 0.40;
+	}
+	else if (Potato_Controller.ButtonB.pressing()) {
+		prct = 1.0;
+	}
+	else if (Potato_Controller.ButtonX.pressing()) {
+		Sonar_Drive(12, 12);
+
+	}
+
+	if (Potato_Controller.ButtonY.pressing()) {
+		Sonar_Stop();
+	}
 
 // Read joystick positions
 float leftSpeed = Potato_Controller.Axis3.position();
