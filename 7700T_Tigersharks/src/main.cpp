@@ -8,6 +8,8 @@
 /*----------------------------------------------------------------------------*/
 
 #include "vex.h"
+#include <cstdio>
+#include <string>
 
 using namespace vex;
 
@@ -29,7 +31,7 @@ distance sonar1 = distance(PORT10);
 double pi = 3.14;
 double wheel_diameter = 3.25;
 double gear_ratio = 0.6;
-int AutonSelected = 5; 
+int AutonSelected = 0; 
 
 
 /*---------------------------------------------------------------------------*/
@@ -77,7 +79,21 @@ void Brake(){
   backRight.stop(brake);
 }
 
-
+void Sonar_Drive(float lspeed, float rspeed){
+	while (true){
+		double sonar_distance = sonar1.objectDistance(mm);
+		if(sonar_distance <= 50){
+			Brake();
+			claw.set(true);
+			break;
+			
+		}
+  		frontLeft.spin(forward, lspeed, percent);
+  		backLeft.spin(forward, lspeed, percent);
+  		frontRight.spin(forward, rspeed, percent);
+  		backRight.spin(forward, rspeed, percent);
+	}
+}
 
 double YOFFSET = 20; //offset for the display
 //Writes a line for the diagnostics of a motor on the Brain
@@ -201,7 +217,9 @@ Drive(0, 0, 0);  //stop the drive
 gyrosensorprint();
 }
 
-void dpinchdrive(float target, bool sonar_truefalse){
+
+
+void dpinchdrive(float target){
 	float position=0;
 	float error=target-position;
 	float kp=2.5;
@@ -210,9 +228,12 @@ void dpinchdrive(float target, bool sonar_truefalse){
 	double sonar_distance = sonar1.objectDistance(mm);
 	frontLeft.setPosition(0.0,rev);
 
+
+
 	while(fabs(error)>accuracy){
+		double sonar_distance = sonar1.objectDistance(mm);
 		Drive(speed, speed, 10);
-		if(sonar_distance <= 50 && sonar_truefalse){
+		if(sonar1.isObjectDetected() == true && sonar_distance <= 50){
 			Brake();
 			claw.set(true);
 			break;
@@ -221,7 +242,9 @@ void dpinchdrive(float target, bool sonar_truefalse){
 		position=frontLeft.position(rev) * pi * gear_ratio * wheel_diameter;
 		error=target-position;
 		speed=kp*error;	
+		// printf("distance", sonar_distance); 
 		}
+
 		Brake();
 	}
 
@@ -238,6 +261,7 @@ void pinchdrive(float target){
 		position=frontLeft.position(rev) * pi * gear_ratio * wheel_diameter;
 		error=target-position;
 		speed=kp*error;	
+
 		}
 		Brake();
 	}
@@ -379,10 +403,10 @@ void pre_auton(void) {
 
 void autonomous(void) {
 	switch (AutonSelected) {
-	// case 0:
-	// claw.set(false);
-	// pinchdrive(20, true);
-	// break;
+	case 0:
+	claw.set(false);
+	Sonar_Drive(10, 10);
+	break;
 	case 1:
 	//RED Adjcant side  
 		claw.set(true); 
@@ -503,6 +527,9 @@ void usercontrol(void) {
   // User control code here, inside the loop
   float prct = 1;
   while (1) {
+	double sonar_distance = sonar1.objectDistance(mm);
+	printf("distance = %0.2fmm\n ", sonar_distance);
+	wait(100, msec); 
     updateMotorMonitor(); 
 	// Select the speed mode FIRST
 if (Potato_Controller.ButtonA.pressing()) {
