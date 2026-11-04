@@ -98,7 +98,7 @@ void Sonar_Drive(float lspeed, float rspeed){
 void Sonar_Stop(){
 	//force stop the sonar?
 	double actualDistance = sonar1.objectDistance(mm);
-	
+
 }
 
 double YOFFSET = 20; //offset for the display
@@ -492,11 +492,11 @@ case 4:
 		claw.set(true); 
 		liftUp(40, 300);
 		liftHold();
-		pinchdrive(11.4);
+		pinchdrive(11.8);
 		liftUp(-40, 600);
 		liftHold();
 		claw.set(false);
-		pinchdrive(-8);
+		pinchdrive(-9);
 		gyrosensorturn(40);	
 		pinchdrive(-13);
 		gyrosensorturn(90);
@@ -504,17 +504,23 @@ case 4:
 		Drive(100, 100, 600);
 		Drive(-40, -40, 200);
 		wait(250, msec); 
-		Drive(60, 60, 600);
+		Drive(100, 100, 600);
 		wait(300, msec); 
 		Drive(-10, -10, 300);
 		pinchdrive(-41);
-		gyrosensorturn(-90);
+		gyrosensorturn(-89.5);
 		Sonar_Drive(13, 13);
 		liftUp(30, 1000);
 		wait(250, msec); 
-		pinchdrive(6);
+		pinchdrive(8);
 		gyrosensorturn(90);
-		pinchdrive(18);
+		pinchdrive(19.4);
+		liftUp(-30, 500);
+		claw.set(false);
+		pinchdrive(-18.5);
+		liftUp(-30, 1000);
+		gyrosensorturn(-47);
+		Sonar_Drive(13, 13);
 		// pinchdrive(-39);
 		 Brake();
 		break;
