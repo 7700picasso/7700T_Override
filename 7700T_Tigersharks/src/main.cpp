@@ -409,7 +409,7 @@ void pre_auton(void) {
 
 void autonomous(void) {
 	switch (AutonSelected) {
-	AutonSelected = 5;
+	AutonSelected = 2;
 	case 0:
 	claw.set(false);
 	Sonar_Drive(10, 10);
@@ -456,27 +456,44 @@ void autonomous(void) {
 
 	case 2:
 	//RED Drive Station 15 second auton
+		// claw.set(true); 
+		// liftUp(40, 300);
+		// liftHold();
+		// Drive(20, 20, 800);
+		// wait(300, msec);
+		// liftUp(-40, 600);
+		// claw.set(false);
+		// pinchdrive(-8);
+		// gyrosensorturn(40);	
+		// Drive(-50, -50, 800);
+		// gyrosensorturn(90);
+		// wait(250, msec);
+		// Drive(100, 100, 600);
+		// Drive(-40, -40, 200);
+		// wait(250, msec); 
+		// Drive(60, 60, 600);
+		// wait(300, msec); 
+		// Drive(-10, -10, 300);
+		// pinchdrive(-3);
 		claw.set(true); 
 		liftUp(40, 300);
 		liftHold();
-		Drive(20, 20, 800);
-		wait(300, msec);
+		pinchdrive(11.8);
 		liftUp(-40, 600);
+		liftHold();
 		claw.set(false);
-		pinchdrive(-8);
-		gyrosensorturn(40);	
-		Drive(-50, -50, 800);
-		gyrosensorturn(90);
+		pinchdrive(-9);
+		gyrosensorturn(-40);	
+		pinchdrive(-13);
+		gyrosensorturn(-90);
 		wait(250, msec);
 		Drive(100, 100, 600);
 		Drive(-40, -40, 200);
 		wait(250, msec); 
-		Drive(60, 60, 600);
+		Drive(100, 100, 600);
 		wait(300, msec); 
-		Drive(-10, -10, 300);
-		pinchdrive(-3);
-		// pinchdrive(35);
-		 Brake();
+		Drive(-10, -10, 1000);
+		Brake();
 		break;
 
 	case 3:
@@ -487,7 +504,7 @@ case 4:
 	//auton left side 15 second auton
 
 		break;
-		case 5:
+case 5:
 	//auton skills auton
 		claw.set(true); 
 		liftUp(40, 300);
