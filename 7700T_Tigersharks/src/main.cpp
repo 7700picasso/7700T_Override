@@ -223,6 +223,24 @@ Drive(0, 0, 0);  //stop the drive
 gyrosensorprint();
 }
 
+void gyrosensorturnTwo(float target){
+	float position = 0.0;
+	float error = target-position;
+	float kp = 0.7;
+	float speed = kp * error;
+	float accuracy = 1.2;
+	gyrosensor.setRotation(0.0, degrees);
+while(fabs(error)>=accuracy)
+{
+speed=kp*error;
+Drive(speed, -speed, 10); //turn right always
+position=gyrosensor.rotation();  //measure the heading of the robot
+error = target-position;  //calculate error
+}
+Drive(0, 0, 0);  //stop the drive
+gyrosensorprint();
+}
+
 
 
 void dpinchdrive(float target){
@@ -268,9 +286,26 @@ void pinchdrive(float target){
 		error=target-position;
 		speed=kp*error;	
 
-		}
-		Brake();
 	}
+	Brake();
+}
+void pinchdriveTwo(float target){
+	float position=0;
+	float error=target-position;
+	float kp=5;
+	float speed=kp*error;
+	float accuracy=0.3;
+	frontLeft.setPosition(0.0,rev);
+
+	while(fabs(error)>accuracy){
+		Drive(speed, speed, 10);
+		position=frontLeft.position(rev) * pi * gear_ratio * wheel_diameter;
+		error=target-position;
+		speed=kp*error;	
+
+	}
+	Brake();
+}
 
 void drawAutonButtons() {
   const char* autonNames[] = {"RED 1", "RED 2", "BLUE 1", "BLUE 2", "SKILLS"};
@@ -417,43 +452,40 @@ void autonomous(void) {
 	case 1:
 	//RED Adjcant side  
 		claw.set(true); 
-		liftUp(60, 400);
+		liftUp(40, 300);
 		liftHold();
-		pinchdrive(10.3);
+		pinchdrive(11.8);
 		liftUp(-40, 600);
+		liftHold();
 		claw.set(false);
-
-		//drive back with inches (10)
-		pinchdrive(-8);
-
-		//turn left -120
-
-		// gyrosensorturn(-130);
-		Drive(-100, 10, 600);
-
-
-		// liftUp(50, 500);
-		// pinchdrive(-9.5);	
-		//  gyrosensorturn(50);
-		// pinchdrive(32);
-		//  gyrosensorturn(90);
-		// //liftUp(-70, 500);
-		//Drive(-75, -75, 900);
-		Drive(-30, -30, 200);	
-		Drive(60, 60, 500);
-		Drive(-30, -30, 200);
-		wait(250, msec); 
-		Drive(50, 50, 500);
-		Drive(-80, -80, 300);
-		pinchdrive(-36);
+		pinchdrive(-9);
+		gyrosensorturn(40);	
+		pinchdrive(-13);
 		gyrosensorturn(90);
+		wait(250, msec);
+		Drive(100, 100, 600);
+		Drive(-40, -40, 200);
+		wait(250, msec); 
+		Drive(100, 100, 600);
+		wait(300, msec); 
+		Drive(-10, -10, 300);
+		pinchdrive(-41);
+		gyrosensorturn(-89.5);
+		Sonar_Drive(40, 40);
+		liftUp(30, 1000);
+		wait(250, msec); 
+		pinchdrive(8);
+		gyrosensorturn(90);
+		pinchdrive(19.4);
+		liftUp(-30, 500);
 		claw.set(false);
-		liftUp(-40, 500);
-		pinchdrive(7.5);
-		// pinchdrive(35);
+		pinchdrive(-18.5);
+		liftUp(-30, 1000);
+		gyrosensorturn(-47);
+		Sonar_Drive(13, 13);
+		// pinchdrive(-39);
 		 Brake();
 		break;
-
 	case 2:
 	//RED Drive Station 15 second auton
 		// claw.set(true); 
@@ -496,7 +528,7 @@ void autonomous(void) {
 		Brake();
 		break;
 
-	case 3:
+case 3:
 	//auton left side 15 second auton
 
 		break;
@@ -506,34 +538,38 @@ case 4:
 		break;
 case 5:
 	//auton skills auton
+	//go score preload
 		claw.set(true); 
 		liftUp(40, 300);
 		liftHold();
-		pinchdrive(11.8);
+		pinchdriveTwo(11.8);
 		liftUp(-40, 600);
 		liftHold();
 		claw.set(false);
-		pinchdrive(-9);
-		gyrosensorturn(40);	
-		pinchdrive(-13);
-		gyrosensorturn(90);
+	//toggle
+		pinchdriveTwo(-9);
+		gyrosensorturnTwo(40);	
+		pinchdriveTwo(-13);
+		gyrosensorturnTwo(90);
 		wait(250, msec);
 		Drive(100, 100, 600);
 		Drive(-40, -40, 200);
+	//get to pin+cup
 		wait(250, msec); 
 		Drive(100, 100, 600);
 		wait(300, msec); 
 		Drive(-10, -10, 300);
-		pinchdrive(-41);
-		gyrosensorturn(-89.5);
-		Sonar_Drive(13, 13);
+		pinchdriveTwo(-41);
+		gyrosensorturnTwo(-89.5);
+		Sonar_Drive(20,20);
 		liftUp(30, 1000);
 		wait(250, msec); 
-		pinchdrive(8);
-		gyrosensorturn(90);
+		pinchdrive(9);
+		gyrosensorturnTwo(90);
 		pinchdrive(19.4);
 		liftUp(-30, 500);
 		claw.set(false);
+	//get to 2nd pin+cup
 		pinchdrive(-18.5);
 		liftUp(-30, 1000);
 		gyrosensorturn(-47);
