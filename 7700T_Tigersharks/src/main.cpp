@@ -24,10 +24,9 @@ motor backRight = motor(PORT21, ratio6_1, false);
 motor Liftone = motor(PORT20, ratio18_1, false); //right
 motor Lifttwo = motor(PORT17, ratio18_1, true); //left
 controller Potato_Controller = controller(primary);
-digital_out claw =  digital_out(Brain.ThreeWirePort.H);
+motor wratchet_claw = motor(PORT11, ratio18_1, true);
 inertial gyrosensor = inertial(PORT6);
 distance sonar1 = distance(PORT10);
-
 double pi = 3.14;
 double wheel_diameter = 3.25;
 double gear_ratio = 0.6;
@@ -84,7 +83,7 @@ void Sonar_Drive(float lspeed, float rspeed){
 		double sonar_distance = sonar1.objectDistance(mm);
 		if(sonar_distance <= 50){
 			Brake();
-			claw.set(true);
+			wratchet_claw.spin(fwd, 30, percent);
 			break;
 			
 		}
@@ -134,71 +133,6 @@ void MotorDisplay(double y, double curr, double temp)
 		Brain.Screen.setFillColor(transparent);
 	}
 }
-
-
-//Displays information on the brain (Backup)
-// void Display() 
-// {
-// 	double leftFrontCurr = leftMotor.current(amp);
-// 	double leftFrontTemp = leftMotor.temperature(celsius);
-// 	double leftBackCurr = bleftMotor.current(amp);
-// 	double leftBackTemp = bleftMotor.temperature(celsius);
-// 	double rightFrontCurr = rightMotor.current(amp);
-// 	double rightFrontTemp = rightMotor.temperature(celsius);
-// 	double rightBackCurr = brightMotor.current(amp);
-// 	double rightBackTemp = brightMotor.temperature(celsius);
-// 	double LiftoneCurr = Liftone.current(amp);
-// 	double LiftoneTemp = Liftone.temperature(celsius);
-// 	double LifttwoCurr = Lifttwo.current(amp);
-// 	double LifttwoTemp = Lifttwo.temperature(celsius);
-
-
-	// if (frontLeft.installed()){
-	// 	MotorDisplay(1, leftFrontCurr, leftFrontTemp);
-	// 	Brain.Screen.printAt(300, YOFFSET + 1, "LeftFront");
-	// } else {
-	// 	Brain.Screen.printAt(5, YOFFSET + 1, "LeftFront Problem");
-	// }
-	
-	
-	// if (backLeft.installed()){
-	// 	MotorDisplay(31, leftBackCurr, leftBackTemp);
-	// 	Brain.Screen.printAt(300, YOFFSET + 31, "LeftBack");
-	// } else {
-	// 	Brain.Screen.printAt(5, YOFFSET + 31, "LeftBack Problem");
-	// }
-
-
-	// if (frontRight.installed()) {
-	// 	MotorDisplay(61, rightFrontCurr, rightFrontTemp);
-	// 	Brain.Screen.printAt(300, YOFFSET + 61, "RightFront");
-	// } else {
-	// 	Brain.Screen.printAt(5, YOFFSET + 61, "RightFront Problem");
-	// }
-	
-	
-	// if (backRight.installed()) {
-	// 	MotorDisplay(91, rightBackCurr, rightBackTemp);
-	// 	Brain.Screen.printAt(300, YOFFSET + 91, "RightBack");
-	// } else {
-	// 	Brain.Screen.printAt(5, YOFFSET + 91, "RightBack Problem");
-	// }
-
-	// if (Liftone.installed()) {
-	// 	MotorDisplay(121, LiftoneCurr, LiftoneTemp);
-	// 	Brain.Screen.printAt(300, YOFFSET + 121, "RightLift");
-	// } else {
-	// 	Brain.Screen.printAt(5, YOFFSET + 121, "RightLift Problem");
-	// }
-
-	// if (Lifttwo.installed()) {
-	// 	MotorDisplay(151, LifttwoCurr, LifttwoTemp);
-	// 	Brain.Screen.printAt(300, YOFFSET + 151, "LeftLift");
-	// } else {
-	// 	Brain.Screen.printAt(5, YOFFSET + 151, "LeftLift");
-	// }
-
-
 
 void gyrosensorprint(){
 	float rotation = gyrosensor.rotation(deg);
@@ -259,7 +193,7 @@ void dpinchdrive(float target){
 		Drive(speed, speed, 10);
 		if(sonar1.isObjectDetected() == true && sonar_distance <= 50){
 			Brake();
-			claw.set(true);
+			wratchet_claw.spin(fwd, 30, percent);
 			break;
 			
 		}
@@ -416,7 +350,7 @@ void updateMotorMonitor() {
 
 //__________________________________EOF___________________________________________
 void pre_auton(void) {
-	claw.set(true);
+	
 
    drawAutonButtons();
   updateMotorMonitor(); //check
@@ -446,18 +380,18 @@ void autonomous(void) {
 	switch (AutonSelected) {
 	AutonSelected = 2;
 	case 0:
-	claw.set(false);
+	wratchet_claw.spin(reverse, 30, percent);
 	Sonar_Drive(10, 10);
 	break;
 	case 1:
 	//RED Adjcant side  
-		claw.set(true); 
+		wratchet_claw.spin(fwd, 30, percent);
 		liftUp(40, 300);
 		liftHold();
 		pinchdrive(11.8);
 		liftUp(-40, 600);
 		liftHold();
-		claw.set(false);
+		wratchet_claw.spin(reverse, 30, percent);
 		pinchdrive(-9);
 		gyrosensorturn(40);	
 		pinchdrive(-13);
@@ -478,7 +412,7 @@ void autonomous(void) {
 		gyrosensorturn(90);
 		pinchdrive(19.4);
 		liftUp(-30, 500);
-		claw.set(false);
+		wratchet_claw.spin(reverse, 30, percent);
 		pinchdrive(-18.5);
 		liftUp(-30, 1000);
 		gyrosensorturn(-47);
@@ -488,32 +422,13 @@ void autonomous(void) {
 		break;
 	case 2:
 	//RED Drive Station 15 second auton
-		// claw.set(true); 
-		// liftUp(40, 300);
-		// liftHold();
-		// Drive(20, 20, 800);
-		// wait(300, msec);
-		// liftUp(-40, 600);
-		// claw.set(false);
-		// pinchdrive(-8);
-		// gyrosensorturn(40);	
-		// Drive(-50, -50, 800);
-		// gyrosensorturn(90);
-		// wait(250, msec);
-		// Drive(100, 100, 600);
-		// Drive(-40, -40, 200);
-		// wait(250, msec); 
-		// Drive(60, 60, 600);
-		// wait(300, msec); 
-		// Drive(-10, -10, 300);
-		// pinchdrive(-3);
-		claw.set(true); 
+		wratchet_claw.spin(fwd, 30, percent);
 		liftUp(40, 300);
 		liftHold();
 		pinchdrive(11.8);
 		liftUp(-40, 600);
 		liftHold();
-		claw.set(false);
+		wratchet_claw.spin(reverse, 30, percent);
 		pinchdrive(-9);
 		gyrosensorturn(-40);	
 		pinchdrive(-13);
@@ -539,13 +454,13 @@ case 4:
 case 5:
 	//auton skills auton
 	//go score preload
-		claw.set(true); 
+		wratchet_claw.spin(fwd, 30, percent);
 		liftUp(40, 300);
 		liftHold();
 		pinchdriveTwo(11.8);
 		liftUp(-40, 600);
 		liftHold();
-		claw.set(false);
+		wratchet_claw.spin(reverse, 30, percent);
 	//toggle
 		pinchdriveTwo(-9);
 		gyrosensorturnTwo(40);	
@@ -568,7 +483,7 @@ case 5:
 		gyrosensorturnTwo(90);
 		pinchdrive(19.4);
 		liftUp(-30, 500);
-		claw.set(false);
+		wratchet_claw.spin(reverse, 30, percent);
 	//get to 2nd pin+cup
 		pinchdrive(-18.5);
 		liftUp(-30, 1000);
@@ -634,35 +549,10 @@ Potato_Controller.Screen.setCursor(1, 1);
 Potato_Controller.Screen.print("Mode: %s",
     prct == 0.25 ? "SLOW" : "NORMAL");
 
-// Potato_Controller.Screen.clearLine(2);
-// Potato_Controller.Screen.setCursor(2, 1);
-// Potato_Controller.Screen.print("Left: %.0f%%", leftCommand);
 
-// Potato_Controller.Screen.clearLine(3);
-// Potato_Controller.Screen.setCursor(3, 1);
-// Potato_Controller.Screen.print("Right: %.0f%%", rightCommand);
-	
-	
-	
-	//float prct = 0.7;
-	
-	//This is Tank Drive
-    // float leftSpeed = Potato_Controller.Axis3.position();
-    // float rightSpeed = Potato_Controller.Axis2.position();
-
-	// float leftPower = LeftSpeed 
-
-	//    Drive(leftSpeed*prct, rightSpeed*prct, 10);
-
-	//      if(Potato_Controller.ButtonA.pressing()){
-	//   	prct = 0.25;
-	// 	}
-	// 	else if (Potato_Controller.ButtonB.pressing()){
-	// 		prct = 1;
-	// 	}
 
 	if (Potato_Controller.ButtonL1.pressing()) {
-		 Liftone.spin(fwd, 100, percent);
+		Liftone.spin(fwd, 100, percent);
   		Lifttwo.spin(fwd, 100, percent);
 
 	}
@@ -676,62 +566,16 @@ Potato_Controller.Screen.print("Mode: %s",
 		Lifttwo.stop();
 
 	}
- 
-    // Display();
-    // if (Potato_Controller.ButtonX.pressing()) {
-    //       Brake();
-    // }
 	if (Potato_Controller.ButtonR1.pressing()) {
-			claw.set(true);
-			// prct = 0.5;
+			wratchet_claw.spin(fwd, 100, percent);
 
 	} 
 	else if (Potato_Controller.ButtonR2.pressing()) {
-			claw.set(false);
-			// prct = 0.75;
+			wratchet_claw.spin(reverse, 100, percent);
 	}
-
-
-	// Display();
-	//int speed =80; 
-    
-	// float leftSpeed=Potato_Controller.Axis3.position(pct)+Potato_Controller.Axis1.position(pct);
-	// float rightSpeed=Potato_Controller.Axis3.position(pct)-Potato_Controller.Axis1.position(pct);
-	//This is Tank Drive
-    // float leftSpeed = Potato_Controller.Axis3.position();
-    // float rightSpeed = Potato_Controller.Axis2.position();
-  
-      
-    // } else if(Potato_Controller.ButtonB.pressing()){
-    //   prct = 1;
-	 
-    // }
-    // Drive(leftSpeed*prct, rightSpeed*prct, 10);
-    
-    // if (Potato_Controller.ButtonX.pressing()) {
-    //       Brake();
-    // }
-	// if (Potato_Controller.ButtonL1.pressing()) {
-	// 		claw.set(true);
-
-	// } 
-	// else if (Potato_Controller.ButtonL2.pressing()) {
-	// 		claw.set(false);
-	// } 
-
-	// if (Potato_Controller.ButtonR1.pressing()){ 
-	// 	Liftone.spin(fwd, speed*-1, percent);
-  	// 	Lifttwo.spin(fwd, speed, percent);
-	// }
-	// else if(Potato_Controller.ButtonR2.pressing()) {
-	// 	Liftone.spin(reverse, speed*-1, percent);
-	// 	Lifttwo.spin(reverse, speed, percent);
-	// }
-	// else {
-	// 	Liftone.stop();
-	// 	Lifttwo.stop();
-	// }
-
+	else { 
+		wratchet_claw.stop(); 
+	}
     // This is the main execution loop for the user control program.
     // Each time through the loop your program should update motor + servo
     // values based on feedback from the joysticks.
