@@ -23,6 +23,8 @@ motor backLeft = motor(PORT9, ratio6_1, true);
 motor backRight = motor(PORT21, ratio6_1, false);
 motor Liftone = motor(PORT20, ratio18_1, false); //right
 motor Lifttwo = motor(PORT17, ratio18_1, true); //left
+motor Liftthree = motor(PORT18, ratio18_1, true); //righter
+motor Liftfour = motor(PORT19, ratio18_1, false); //lefter
 controller Potato_Controller = controller(primary);
 motor wratchet_claw = motor(PORT11, ratio18_1, true);
 inertial gyrosensor = inertial(PORT6);
@@ -34,7 +36,7 @@ int AutonSelected = 0;
 
 
 /*---------------------------------------------------------------------------*/
-/*                          Pre-Autonomous Fu1aznctions                         */
+/*                          Pre-Autonomous Fu1aznctions                      */
 /*                                                                           */
 /*  You may want to perform some actions before the competition starts.      */
 /*  Do them in the following function.  You must return from this function   */
@@ -43,24 +45,23 @@ int AutonSelected = 0;
 /*  not every time that the robot is disabled.                               */
 /*---------------------------------------------------------------------------*/
 
-
-
-
 void liftUp(float speed, int wt){
   Liftone.spin(fwd, speed, percent);
   Lifttwo.spin(fwd, speed, percent);
+  Liftthree.spin(fwd, speed, percent);
+  Liftfour.spin(fwd, speed, percent);
   wait(wt, msec);
   Liftone.stop(brake);
   Lifttwo.stop(brake);
+  Liftthree.stop(brake);
+  Liftfour.stop(brake);
 }
-
-
-  
-
 
 void liftHold(){
   Liftone.stop(hold);
   Lifttwo.stop(hold);
+  Liftthree.stop(hold);
+  Liftfour.stop(hold);
 }
 
 void Drive(float lspeed, float rspeed, int wt){
@@ -94,46 +95,6 @@ void Sonar_Drive(float lspeed, float rspeed){
 	}
 }
 
-void Sonar_Stop(){
-	//force stop the sonar?
-	double actualDistance = sonar1.objectDistance(mm);
-
-}
-
-double YOFFSET = 20; //offset for the display
-//Writes a line for the diagnostics of a motor on the Brain
-void MotorDisplay(double y, double curr, double temp)
-{
-	Brain.Screen.setFillColor(transparent);
-	Brain.Screen.printAt(5, YOFFSET + y, "Current: %.1fA", curr);
-	
-	if (curr < 1){
-		Brain.Screen.setFillColor(green);
-	} else if(curr >= 1 && curr  <= 2.5) {
-		Brain.Screen.setFillColor(yellow);
-	} else {
-		Brain.Screen.setFillColor(red);
-		Brain.Screen.drawRectangle(140, YOFFSET + y - 15, 15, 15);
-	}
-
-	
-	Brain.Screen.setFillColor(transparent);
-	Brain.Screen.printAt(160, YOFFSET + y, "Temp: %.1fC", temp);
-	
-	if (temp < 45){
-		Brain.Screen.setFillColor(green);
-	} else if(temp <= 50 && temp  >= 45){
-		// TRUE and TRUE --> True
-		// TRUE and FALSE --> False
-		// FALSE and FALSE --> False
-		Brain.Screen.setFillColor(yellow);
-	} else {
-		Brain.Screen.setFillColor(red);
-		Brain.Screen.drawRectangle(275, YOFFSET + y - 15, 15, 15);
-		Brain.Screen.setFillColor(transparent);
-	}
-}
-
 void gyrosensorprint(){
 	float rotation = gyrosensor.rotation(deg);
 	Brain.Screen.printAt(1,60, "rotation = %.2f. degrees", rotation);
@@ -146,36 +107,15 @@ void gyrosensorturn(float target){
 	float speed = kp * error;
 	float accuracy = 2.0;
 	gyrosensor.setRotation(0.0, degrees);
-while(fabs(error)>=accuracy)
-{
-speed=kp*error;
-Drive(speed, -speed, 10); //turn right always
-position=gyrosensor.rotation();  //measure the heading of the robot
-error = target-position;  //calculate error
+	while(fabs(error)>=accuracy){
+		speed=kp*error;
+		Drive(speed, -speed, 10); //turn right always
+		position=gyrosensor.rotation();  //measure the heading of the robot
+		error = target-position;  //calculate error
+		}
+	Drive(0, 0, 0);  //stop the drive
+	gyrosensorprint();
 }
-Drive(0, 0, 0);  //stop the drive
-gyrosensorprint();
-}
-
-void gyrosensorturnTwo(float target){
-	float position = 0.0;
-	float error = target-position;
-	float kp = 0.7;
-	float speed = kp * error;
-	float accuracy = 1.2;
-	gyrosensor.setRotation(0.0, degrees);
-while(fabs(error)>=accuracy)
-{
-speed=kp*error;
-Drive(speed, -speed, 10); //turn right always
-position=gyrosensor.rotation();  //measure the heading of the robot
-error = target-position;  //calculate error
-}
-Drive(0, 0, 0);  //stop the drive
-gyrosensorprint();
-}
-
-
 
 void dpinchdrive(float target){
 	float position=0;
@@ -223,6 +163,7 @@ void pinchdrive(float target){
 	}
 	Brake();
 }
+
 void pinchdriveTwo(float target){
 	float position=0;
 	float error=target-position;
@@ -346,6 +287,10 @@ void updateMotorMonitor() {
   drawMotorBox("Liftone",  Liftone,  col1X, 121, boxW, boxH);
   drawMotorBox("Lifttwo", Lifttwo, col2X, 121, boxW, boxH);
 
+  //row 4 (y = 179)
+  drawMotorBox("Liftthree",  Liftthree,  col1X, 121, boxW, boxH);
+  drawMotorBox("Liftfour", Liftfour, col2X, 121, boxW, boxH);
+
 }
 
 //__________________________________EOF___________________________________________
@@ -463,9 +408,9 @@ case 5:
 		wratchet_claw.spin(reverse, 30, percent);
 	//toggle
 		pinchdriveTwo(-9);
-		gyrosensorturnTwo(40);	
+		gyrosensorturn(40);	
 		pinchdriveTwo(-13);
-		gyrosensorturnTwo(90);
+		gyrosensorturn(90);
 		wait(250, msec);
 		Drive(100, 100, 600);
 		Drive(-40, -40, 200);
@@ -475,12 +420,12 @@ case 5:
 		wait(300, msec); 
 		Drive(-10, -10, 300);
 		pinchdriveTwo(-41);
-		gyrosensorturnTwo(-89.5);
+		gyrosensorturn(-89.5);
 		Sonar_Drive(20,20);
 		liftUp(30, 1000);
 		wait(250, msec); 
 		pinchdrive(9);
-		gyrosensorturnTwo(90);
+		gyrosensorturn(90);
 		pinchdrive(19.4);
 		liftUp(-30, 500);
 		wratchet_claw.spin(reverse, 30, percent);
@@ -527,12 +472,6 @@ void usercontrol(void) {
 		Sonar_Drive(12, 12);
 
 	}
-
-	if (Potato_Controller.ButtonY.pressing()) {
-		Sonar_Stop();
-	}
-
-// Read joystick positions
 float leftSpeed = Potato_Controller.Axis3.position();
 float rightSpeed = Potato_Controller.Axis2.position();
 
@@ -561,20 +500,17 @@ Potato_Controller.Screen.print("Mode: %s",
   		Lifttwo.spin(reverse, 100, percent);
 
 	}
-	else {
-		Liftone.stop();
-		Lifttwo.stop();
-
-	}
-	if (Potato_Controller.ButtonR1.pressing()) {
+	else if (Potato_Controller.ButtonR1.pressing()) {
 			wratchet_claw.spin(fwd, 100, percent);
 
 	} 
 	else if (Potato_Controller.ButtonR2.pressing()) {
-			wratchet_claw.spin(reverse, 100, percent);
+			wratchet_claw.spin(reverse, 50, percent);
 	}
 	else { 
-		wratchet_claw.stop(); 
+		wratchet_claw.stop();
+		Liftone.stop();
+		Lifttwo.stop();
 	}
     // This is the main execution loop for the user control program.
     // Each time through the loop your program should update motor + servo
