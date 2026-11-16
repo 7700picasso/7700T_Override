@@ -21,10 +21,10 @@ motor frontLeft = motor(PORT8, ratio6_1, true);
 motor frontRight = motor(PORT1, ratio6_1, false);
 motor backLeft = motor(PORT9, ratio6_1, true);
 motor backRight = motor(PORT21, ratio6_1, false);
-motor Liftone = motor(PORT20, ratio18_1, false); //right
-motor Lifttwo = motor(PORT17, ratio18_1, true); //left
-motor Liftthree = motor(PORT18, ratio18_1, true); //righter
-motor Liftfour = motor(PORT19, ratio18_1, false); //lefter
+motor RightLiftOne = motor(PORT20, ratio18_1, false); //right
+motor LeftLiftOne = motor(PORT16, ratio18_1, true); //left
+motor RightLiftTwo = motor(PORT17, ratio18_1, true); //righter
+motor LeftLiftTwo = motor(PORT19, ratio18_1, false); //lefter
 controller Potato_Controller = controller(primary);
 motor wratchet_claw = motor(PORT11, ratio18_1, true);
 inertial gyrosensor = inertial(PORT6);
@@ -491,16 +491,26 @@ Potato_Controller.Screen.print("Mode: %s",
 
 
 	if (Potato_Controller.ButtonL1.pressing()) {
-		Liftone.spin(fwd, 100, percent);
-  		Lifttwo.spin(fwd, 100, percent);
+		 LeftLiftOne.spin(fwd, 100, percent);
+  		LeftLiftTwo.spin(fwd, 100, percent);
+		RightLiftOne.spin(fwd, 100, pct); 
+		RightLiftTwo.stpin(fwd, 100, pct); 
 
 	}
 	else if (Potato_Controller.ButtonL2.pressing()) { 
-		Liftone.spin(reverse, 100, percent);
-  		Lifttwo.spin(reverse, 100, percent);
+		LeftLiftOne.spin(reverse, 100, percent);
+  		LeftLiftTwo.spin(reverse, 100, percent);
+		RightLiftOne.spin(reverse, 100, pct); 
+		RightLiftTwo.stpin(reverse, 100, pct); 
 
 	}
-	else if (Potato_Controller.ButtonR1.pressing()) {
+	else { 
+		eftLiftOne.stop(); 
+  		LeftLiftTwo.stop(); 
+		RightLiftOne.stop(); 
+		RightLiftTwo.stop(); 
+	}
+	if (Potato_Controller.ButtonR1.pressing()) {
 			wratchet_claw.spin(fwd, 100, percent);
 
 	} 
@@ -509,8 +519,7 @@ Potato_Controller.Screen.print("Mode: %s",
 	}
 	else { 
 		wratchet_claw.stop();
-		Liftone.stop();
-		Lifttwo.stop();
+	
 	}
     // This is the main execution loop for the user control program.
     // Each time through the loop your program should update motor + servo
