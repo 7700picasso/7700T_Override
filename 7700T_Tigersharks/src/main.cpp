@@ -46,22 +46,22 @@ int AutonSelected = 0;
 /*---------------------------------------------------------------------------*/
 
 void liftUp(float speed, int wt){
-  Liftone.spin(fwd, speed, percent);
-  Lifttwo.spin(fwd, speed, percent);
-  Liftthree.spin(fwd, speed, percent);
-  Liftfour.spin(fwd, speed, percent);
+  RightLiftOne.spin(fwd, speed, percent);
+  RightLiftTwo.spin(fwd, speed, percent);
+  LeftLiftOne.spin(fwd, speed, percent);
+  LeftLiftTwo.spin(fwd, speed, percent);
   wait(wt, msec);
-  Liftone.stop(brake);
-  Lifttwo.stop(brake);
-  Liftthree.stop(brake);
-  Liftfour.stop(brake);
+  RightLiftOne.stop(brake);
+  RightLiftTwo.stop(brake);
+  LeftLiftOne.stop(brake);
+  LeftLiftTwo.stop(brake);
 }
 
 void liftHold(){
-  Liftone.stop(hold);
-  Lifttwo.stop(hold);
-  Liftthree.stop(hold);
-  Liftfour.stop(hold);
+  RightLiftOne.stop(hold);
+  RightLiftTwo.stop(hold);
+  LeftLiftOne.stop(hold);
+  LeftLiftTwo.stop(hold);
 }
 
 void Drive(float lspeed, float rspeed, int wt){
@@ -284,12 +284,12 @@ void updateMotorMonitor() {
   drawMotorBox("backRight", backRight, col2X, 63,  boxW, boxH);
 
   // Row 3 (y = 121)
-  drawMotorBox("Liftone",  Liftone,  col1X, 121, boxW, boxH);
-  drawMotorBox("Lifttwo", Lifttwo, col2X, 121, boxW, boxH);
+  drawMotorBox("RL1",  RightLiftOne,  col1X, 121, boxW, boxH);
+  drawMotorBox("RL2", RightLiftTwo, col2X, 121, boxW, boxH);
 
   //row 4 (y = 179)
-  drawMotorBox("Liftthree",  Liftthree,  col1X, 121, boxW, boxH);
-  drawMotorBox("Liftfour", Liftfour, col2X, 121, boxW, boxH);
+  drawMotorBox("LL1",  LeftLiftOne,  col1X, 179, boxW, boxH);
+  drawMotorBox("LL2", LeftLiftTwo, col2X, 179, boxW, boxH);
 
 }
 
@@ -329,7 +329,8 @@ void autonomous(void) {
 	Sonar_Drive(10, 10);
 	break;
 	case 1:
-	//RED Adjcant side  
+	//RED Driver side  
+	//stack first pin
 		wratchet_claw.spin(fwd, 30, percent);
 		liftUp(40, 300);
 		liftHold();
@@ -337,6 +338,7 @@ void autonomous(void) {
 		liftUp(-40, 600);
 		liftHold();
 		wratchet_claw.spin(reverse, 30, percent);
+	//go to toggle
 		pinchdrive(-9);
 		gyrosensorturn(40);	
 		pinchdrive(-13);
@@ -347,10 +349,12 @@ void autonomous(void) {
 		wait(250, msec); 
 		Drive(100, 100, 600);
 		wait(300, msec); 
+	//go to pin+cup
 		Drive(-10, -10, 300);
 		pinchdrive(-41);
 		gyrosensorturn(-89.5);
 		Sonar_Drive(40, 40);
+	//stack it
 		liftUp(30, 1000);
 		wait(250, msec); 
 		pinchdrive(8);
@@ -358,6 +362,7 @@ void autonomous(void) {
 		pinchdrive(19.4);
 		liftUp(-30, 500);
 		wratchet_claw.spin(reverse, 30, percent);
+	//go to second pin+cup
 		pinchdrive(-18.5);
 		liftUp(-30, 1000);
 		gyrosensorturn(-47);
@@ -366,7 +371,11 @@ void autonomous(void) {
 		 Brake();
 		break;
 	case 2:
-	//RED Drive Station 15 second auton
+	//RED adj. Station 15 second auton
+	//setup claw
+		liftUp(70, 300);
+		liftUp(-70, 300);
+	//stack pin
 		wratchet_claw.spin(fwd, 30, percent);
 		liftUp(40, 300);
 		liftHold();
@@ -374,11 +383,13 @@ void autonomous(void) {
 		liftUp(-40, 600);
 		liftHold();
 		wratchet_claw.spin(reverse, 30, percent);
+	//go to toggle
 		pinchdrive(-9);
 		gyrosensorturn(-40);	
 		pinchdrive(-13);
 		gyrosensorturn(-90);
 		wait(250, msec);
+	//toggle
 		Drive(100, 100, 600);
 		Drive(-40, -40, 200);
 		wait(250, msec); 
@@ -389,15 +400,85 @@ void autonomous(void) {
 		break;
 
 case 3:
-	//auton left side 15 second auton
+	//Blue adjacent side 15 second auton
+	//setup claw
+		liftUp(70, 300);
+		liftUp(-70, 300);
+	//stack pin
+		wratchet_claw.spin(fwd, 30, percent);
+		liftUp(40, 300);
+		liftHold();
+		pinchdrive(11.8);
+		liftUp(-40, 600);
+		liftHold();
+		wratchet_claw.spin(reverse, 30, percent);
+	//go to toggle
+		pinchdrive(-9);
+		gyrosensorturn(-40);	
+		pinchdrive(-13);
+		gyrosensorturn(-90);
+		wait(250, msec);
+	//toggle
+		Drive(100, 100, 600);
+		Drive(-40, -40, 200);
+		wait(250, msec); 
+		Drive(100, 100, 600);
+		wait(300, msec); 
+		Drive(-10, -10, 1000);
+		Brake();
 
 		break;
 case 4:
 	//auton left side 15 second auton
-
+	//RED Adjacent side  
+	//setup claw
+		liftUp(70, 300);
+		liftUp(-70, 300);
+	//stack first pin
+		wratchet_claw.spin(fwd, 30, percent);
+		liftUp(40, 300);
+		liftHold();
+		pinchdrive(11.8);
+		liftUp(-40, 600);
+		liftHold();
+		wratchet_claw.spin(reverse, 30, percent);
+	//go to toggle
+		pinchdrive(-9);
+		gyrosensorturn(40);	
+		pinchdrive(-13);
+		gyrosensorturn(90);
+		wait(250, msec);
+		Drive(100, 100, 600);
+		Drive(-40, -40, 200);
+		wait(250, msec); 
+		Drive(100, 100, 600);
+		wait(300, msec); 
+	//go to pin+cup
+		Drive(-10, -10, 300);
+		pinchdrive(-41);
+		gyrosensorturn(-89.5);
+		Sonar_Drive(40, 40);
+	//stack it
+		liftUp(30, 1000);
+		wait(250, msec); 
+		pinchdrive(8);
+		gyrosensorturn(90);
+		pinchdrive(19.4);
+		liftUp(-30, 500);
+		wratchet_claw.spin(reverse, 30, percent);
+	//go to second pin+cup
+		pinchdrive(-18.5);
+		liftUp(-30, 1000);
+		gyrosensorturn(-47);
+		Sonar_Drive(13, 13);
+		// pinchdrive(-39);
+		Brake();
 		break;
 case 5:
 	//auton skills auton
+	//setup claw
+		liftUp(70, 300);
+		liftUp(-70, 300);
 	//go score preload
 		wratchet_claw.spin(fwd, 30, percent);
 		liftUp(40, 300);
@@ -491,31 +572,31 @@ Potato_Controller.Screen.print("Mode: %s",
 
 
 	if (Potato_Controller.ButtonL1.pressing()) {
-		 LeftLiftOne.spin(fwd, 100, percent);
+		LeftLiftOne.spin(fwd, 100, percent);
   		LeftLiftTwo.spin(fwd, 100, percent);
 		RightLiftOne.spin(fwd, 100, pct); 
-		RightLiftTwo.stpin(fwd, 100, pct); 
+		RightLiftTwo.spin(fwd, 100, pct); 
 
 	}
 	else if (Potato_Controller.ButtonL2.pressing()) { 
-		LeftLiftOne.spin(reverse, 100, percent);
-  		LeftLiftTwo.spin(reverse, 100, percent);
-		RightLiftOne.spin(reverse, 100, pct); 
-		RightLiftTwo.stpin(reverse, 100, pct); 
+		LeftLiftOne.spin(reverse, 50, percent);
+  		LeftLiftTwo.spin(reverse, 50, percent);
+		RightLiftOne.spin(reverse, 50, pct); 
+		RightLiftTwo.spin(reverse, 50, pct); 
 
 	}
 	else { 
-		eftLiftOne.stop(); 
+		LeftLiftOne.stop(); 
   		LeftLiftTwo.stop(); 
 		RightLiftOne.stop(); 
 		RightLiftTwo.stop(); 
 	}
-	if (Potato_Controller.ButtonR1.pressing()) {
-			wratchet_claw.spin(fwd, 100, percent);
+	if (Potato_Controller.ButtonR2.pressing()) {
+			wratchet_claw.spin(fwd, 50, percent);
 
 	} 
-	else if (Potato_Controller.ButtonR2.pressing()) {
-			wratchet_claw.spin(reverse, 50, percent);
+	else if (Potato_Controller.ButtonR1.pressing()) {
+			wratchet_claw.spin(reverse, 100, percent);
 	}
 	else { 
 		wratchet_claw.stop();
