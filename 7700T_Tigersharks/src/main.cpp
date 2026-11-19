@@ -568,7 +568,11 @@ Potato_Controller.Screen.clearLine(1);
 Potato_Controller.Screen.setCursor(1, 1);
 Potato_Controller.Screen.print("Mode: %s",
     prct == 0.25 ? "SLOW" : "NORMAL");
-
+//if (abs(leftSpeed)  || abs(rightSpeed) ) {
+//      Brain.Screen.clearLine(1);
+//      Brain.Screen.printAt(10, 30, "Axis3: %d | Axis2: %d", leftSpeed, rightSpeed);
+//      printf("Joystick Active -> Axis3: %d, Axis2: %d\n", leftSpeed, rightSpeed);
+//}
 
 
 	if (Potato_Controller.ButtonL1.pressing()) {
