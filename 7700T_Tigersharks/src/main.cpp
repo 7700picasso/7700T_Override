@@ -46,22 +46,22 @@ int AutonSelected = 0;
 /*---------------------------------------------------------------------------*/
 
 void liftUp(float speed, int wt){
-  Liftone.spin(fwd, speed, percent);
-  Lifttwo.spin(fwd, speed, percent);
-  Liftthree.spin(fwd, speed, percent);
-  Liftfour.spin(fwd, speed, percent);
+  LeftLiftOne.spin(fwd, speed, percent);
+  LeftLiftTwo.spin(fwd, speed, percent);
+  RightLiftOne.spin(fwd, speed, percent);
+  RightLiftTwo.spin(fwd, speed, percent);
   wait(wt, msec);
-  Liftone.stop(brake);
-  Lifttwo.stop(brake);
-  Liftthree.stop(brake);
-  Liftfour.stop(brake);
+  LeftLiftOne.stop(brake);
+  LeftLiftTwo.stop(brake);
+  RightLiftOne.stop(brake);
+  RightLiftTwo.stop(brake);
 }
 
 void liftHold(){
-  Liftone.stop(hold);
-  Lifttwo.stop(hold);
-  Liftthree.stop(hold);
-  Liftfour.stop(hold);
+  LeftLiftOne.stop(hold);
+  LeftLiftTwo.stop(hold);
+  RightLiftOne.stop(hold);
+  RightLiftTwo.stop(hold);
 }
 
 void Drive(float lspeed, float rspeed, int wt){
@@ -284,12 +284,12 @@ void updateMotorMonitor() {
   drawMotorBox("backRight", backRight, col2X, 63,  boxW, boxH);
 
   // Row 3 (y = 121)
-  drawMotorBox("Liftone",  Liftone,  col1X, 121, boxW, boxH);
-  drawMotorBox("Lifttwo", Lifttwo, col2X, 121, boxW, boxH);
+  drawMotorBox("Liftone",  RightLiftOne,  col1X, 121, boxW, boxH);
+  drawMotorBox("Lifttwo", RightLiftTwo, col2X, 121, boxW, boxH);
 
   //row 4 (y = 179)
-  drawMotorBox("Liftthree",  Liftthree,  col1X, 121, boxW, boxH);
-  drawMotorBox("Liftfour", Liftfour, col2X, 121, boxW, boxH);
+  drawMotorBox("Liftthree",  LeftLiftOne,  col1X, 121, boxW, boxH);
+  drawMotorBox("Liftfour", LeftLiftTwo, col2X, 121, boxW, boxH);
 
 }
 
@@ -494,18 +494,18 @@ Potato_Controller.Screen.print("Mode: %s",
 		 LeftLiftOne.spin(fwd, 100, percent);
   		LeftLiftTwo.spin(fwd, 100, percent);
 		RightLiftOne.spin(fwd, 100, pct); 
-		RightLiftTwo.stpin(fwd, 100, pct); 
+		RightLiftTwo.spin(fwd, 100, pct); 
 
 	}
 	else if (Potato_Controller.ButtonL2.pressing()) { 
 		LeftLiftOne.spin(reverse, 100, percent);
   		LeftLiftTwo.spin(reverse, 100, percent);
 		RightLiftOne.spin(reverse, 100, pct); 
-		RightLiftTwo.stpin(reverse, 100, pct); 
+		RightLiftTwo.spin(reverse, 100, pct); 
 
 	}
 	else { 
-		eftLiftOne.stop(); 
+		LeftLiftOne.stop(); 
   		LeftLiftTwo.stop(); 
 		RightLiftOne.stop(); 
 		RightLiftTwo.stop(); 
