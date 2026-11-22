@@ -549,10 +549,6 @@ void usercontrol(void) {
 	else if (Potato_Controller.ButtonB.pressing()) {
 		prct = 1.0;
 	}
-	else if (Potato_Controller.ButtonX.pressing()) {
-		Sonar_Drive(12, 12);
-
-	}
 float leftSpeed = Potato_Controller.Axis3.position();
 float rightSpeed = Potato_Controller.Axis2.position();
 
@@ -596,7 +592,7 @@ Potato_Controller.Screen.print("Mode: %s",
 		RightLiftTwo.stop(); 
 	}
 	if (Potato_Controller.ButtonR2.pressing()) {
-			wratchet_claw.spin(fwd, 50, percent);
+			wratchet_claw.spin(fwd, 100, percent);
 
 	} 
 	else if (Potato_Controller.ButtonR1.pressing()) {
