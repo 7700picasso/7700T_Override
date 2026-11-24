@@ -183,7 +183,7 @@ void pinchdriveTwo(float target){
 }
 
 void drawAutonButtons() {
-  const char* autonNames[] = {"RED 1", "RED 2", "BLUE 1", "BLUE 2", "SKILLS"};
+  const char* autonNames[] = {"RED Driver", "RED Adj.", "BLUE Driver", "BLUE Adj.", "SKILLS"};
   Brain.Screen.setFont(fontType::mono20);
 
   for (int i = 0; i < 5; i++) {
@@ -325,8 +325,10 @@ void autonomous(void) {
 	switch (AutonSelected) {
 	AutonSelected = 2;
 	case 0:
-	wratchet_claw.spin(reverse, 30, percent);
-	Sonar_Drive(10, 10);
+	wratchet_claw.spin(forward, 100, percent);
+	liftUp(40, 300);
+	liftUp(-40, 400);
+	wratchet_claw.spin(reverse, 100, percent);
 	break;
 	case 1:
 	//RED Driver side  
@@ -402,29 +404,30 @@ void autonomous(void) {
 case 3:
 	//Blue adjacent side 15 second auton
 	//setup claw
-		liftUp(70, 300);
-		liftUp(-70, 300);
+		wratchet_claw.spin(forward, 100, percent);
+		liftUp(100, 100);
+		liftUp(-100, 200);
+		wratchet_claw.spin(reverse, 100, percent);
 	//stack pin
-		wratchet_claw.spin(fwd, 30, percent);
-		liftUp(40, 300);
+		liftUp(40, 1000);
 		liftHold();
 		pinchdrive(11.8);
-		liftUp(-40, 600);
-		liftHold();
-		wratchet_claw.spin(reverse, 30, percent);
+		liftUp(-40, 1100);
+		wratchet_claw.spin(forward, 30, percent);
 	//go to toggle
-		pinchdrive(-9);
-		gyrosensorturn(-40);	
+		pinchdrive(-5);
+		gyrosensorturn(45);	
 		pinchdrive(-13);
-		gyrosensorturn(-90);
+		gyrosensorturn(90);
 		wait(250, msec);
 	//toggle
 		Drive(100, 100, 600);
-		Drive(-40, -40, 200);
+		Drive(-50, -50, 200);
 		wait(250, msec); 
 		Drive(100, 100, 600);
 		wait(300, msec); 
 		Drive(-10, -10, 1000);
+		wratchet_claw.stop();
 		Brake();
 
 		break;
